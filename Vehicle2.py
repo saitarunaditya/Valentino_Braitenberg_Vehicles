@@ -1,6 +1,9 @@
 import pygame
 import math
 import random
+import time
+import os
+
 
 pygame.init()
 
@@ -185,6 +188,18 @@ while running:
             mx, my = event.pos
             lights.append(Light(mx, my))
 
+        if event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+
+            # Make sure folder exists
+            if not os.path.exists("screenshots"):
+                os.makedirs("screenshots")
+
+            # Use time to make unique filename
+            screenshot_name = f"screenshots/Vehicle2_capture_{int(time.time())}.png"
+
+            # Save AFTER drawing (flag)
+            take_screenshot = screenshot_name
+
     for L in lights:
         L.draw(screen)
 
@@ -211,6 +226,12 @@ while running:
     screen.blit(s2, (20, 90))
 
     pygame.display.flip()
+    # Save screenshot AFTER the frame is drawn
+    if 'take_screenshot' in locals():
+        pygame.image.save(screen, take_screenshot)
+        print(f"Screenshot saved as: {take_screenshot}")
+        del take_screenshot
+
     clock.tick(60)
 
 pygame.quit()
